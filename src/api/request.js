@@ -38,7 +38,6 @@ const request = async (
 
     try {
         const response = await axios(config);
-        console.log(response, "response")
         return response.data;
     } catch (err) {
         console.error('API Error:', err);

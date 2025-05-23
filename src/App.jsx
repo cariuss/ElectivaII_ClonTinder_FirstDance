@@ -1,5 +1,8 @@
 import { useEffect } from "react"
 import { login } from "./api/authservice"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import Home from "./views/Home"
+import RegistrationForm from "./views/RegistrationFormm"
 
 
 function App() {
@@ -17,9 +20,13 @@ function App() {
     doLogin()
   }, [])
   return (
-    <>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/swipes" element={<Home />} />
+        <Route path="/create-user" element={<RegistrationForm />} />
 
-    </>
+      </Routes>
+  </BrowserRouter>
   )
 }
 

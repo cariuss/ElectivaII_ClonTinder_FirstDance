@@ -20,6 +20,7 @@ const request = async (
     body = null,
     extraHeaders = {}
 ) => {
+    console.log("body", body)
     const url = `${BASE_URL}/${module}${urlParams ? `/${urlParams}` : ''}${buildQueryString(queryParams)}`;
 
     const headers = {
@@ -37,6 +38,7 @@ const request = async (
 
     try {
         const response = await axios(config);
+        console.log(response, "response")
         return response.data;
     } catch (err) {
         console.error('API Error:', err);

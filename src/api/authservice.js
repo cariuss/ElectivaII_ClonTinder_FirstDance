@@ -4,7 +4,7 @@ export const login = async (email, password) => {
 
     return await request(
         'post',
-        'login',
+        'auth/login',
         false,
         {},
         '',

@@ -1,33 +1,31 @@
-import { useEffect } from "react"
-import { login } from "./api/authservice"
-import { BrowserRouter, Route, Routes } from "react-router-dom"
-import Home from "./views/Home"
-import RegistrationForm from "./views/RegistrationFormm"
-
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { GlobalProvider } from "./context/GlobalContext";
+import RegisterForm from "./views/RegisterForm";
+import LoginForm from "./views/LoginForm";
+import PrivateRoute from "./routes/PrivateRoute";
+import Dashboard from "./components/Dashboard";
+import Home from "./views/Home";
+import MatchesChat from "./views/MatchesChat";
 
 function App() {
-  useEffect(() => {
-    const doLogin = async () => {
-      try {
-        const result = await login("user@example.com", "securePassword123")
-        const token = result.data.token;
-        sessionStorage.setItem("token", token);
-      } catch (error) {
-        console.error("Login failed:", error)
-      }
-    }
-
-    doLogin()
-  }, [])
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/swipes" element={<Home />} />
-        <Route path="/create-user" element={<RegistrationForm />} />
+    <GlobalProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/create/user" element={<RegisterForm />} />
+          {/* <Route path="/swipes" element={<Home />} /> */}
+          <Route path="/login" element={<LoginForm />} />
 
-      </Routes>
-  </BrowserRouter>
-  )
+          {/* Private Routes */}
+          <Route element={<PrivateRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </GlobalProvider>
+  );
 }
 
-export default App
+export default App;

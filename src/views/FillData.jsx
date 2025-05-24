@@ -8,8 +8,12 @@ const FillData = ({ userData, onSubmit }) => {
         age: "",
         gender: "",
         bio: "",
-        preferences: "",
-        location: "",
+        minAge: 0,
+        maxAge: 0,
+        interestedInGender: "",
+        maxDistance: 0,
+        city: "",
+        country: "",
         profilePhoto: ""
     };
 
@@ -18,8 +22,12 @@ const FillData = ({ userData, onSubmit }) => {
         age: initialFormData.age || "",
         gender: initialFormData.gender || "",
         bio: initialFormData.bio || "",
-        preferences: initialFormData.preferences || "",
-        location: initialFormData.location || "",
+        minAge: initialFormData.minAge || "",
+        maxAge: initialFormData.maxAge || "",
+        interestedInGender: initialFormData.interestedInGender || "",
+        maxDistance: initialFormData.maxDistance || "",
+        city: initialFormData.city,
+        country: initialFormData.country || "",
         profilePhoto: initialFormData.profilePhoto || ""
     });
 
@@ -42,8 +50,21 @@ const FillData = ({ userData, onSubmit }) => {
                 Number(formData.age),
                 formData.gender,
                 formData.bio,
-                formData.preferences,
-                formData.location,
+                {
+                    preferences: {
+                        minAge: formData.minAge,
+                        maxAge: formData.maxAge,
+                        interestedInGender: formData.interestedInGender,
+                        maxDistance: formData.maxDistance
+
+                    }
+                },
+                {
+                    location: {
+                        city: formData.city,
+                        country: formData.country
+                    }
+                },
                 formData.profilePhoto
             );
 
@@ -73,8 +94,19 @@ const FillData = ({ userData, onSubmit }) => {
                 </select>
                 <textarea name="bio" placeholder="Bio" value={formData.bio} onChange={handleChange} required className="w-full p-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-red-500" />
 
-                <input type="text" name="preferences" placeholder="Preferences" value={formData.preferences} onChange={handleChange} required className="w-full p-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-red-500" />
-                <input type="text" name="location" placeholder="Location" value={formData.location} onChange={handleChange} required className="w-full p-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-red-500" />
+                <select name="gender" value={formData.interestedInGender} onChange={handleChange} required className="w-full p-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-red-500">
+                    <option value="">Select Prefered Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <input type="number" name="distance" placeholder="Distance" value={formData.maxDistance} onChange={handleChange} required className="w-full p-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-red-500" />
+
+                <input type="text" name="city" placeholder="City" value={formData.location} onChange={handleChange} required className="w-full p-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-red-500" />
+                <input type="text" name="country" placeholder="Country" value={formData.location} onChange={handleChange} required className="w-full p-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-red-500" />
+
+
                 <input type="text" name="profilePhoto" placeholder="Profile Photo URL" value={formData.profilePhoto} onChange={handleChange} required className="w-full p-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-red-500" />
 
                 <button type="submit" className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg font-bold w-full">

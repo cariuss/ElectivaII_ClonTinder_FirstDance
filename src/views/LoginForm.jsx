@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../api/authservice";
 import logo from "../assets/logo.svg"
 import { useGlobal } from "../context/GlobalContext"; // Adjust path as needed
 

@@ -14,8 +14,10 @@ const Dashboard = () => {
       {/* Main Content Area */}
       <div className="flex-1 p-6">
         <div className="mt-4">
-          {selectedView === "Home" && <UserProfile />}
+          {selectedView === "Profile" && <UserProfile />}
           {selectedView === "Matches" && <MatchesChat />}
+          {selectedView === "helpme" && <MatchesChat />}
+
           {/* Additional views can be added later */}
         </div>
       </div>

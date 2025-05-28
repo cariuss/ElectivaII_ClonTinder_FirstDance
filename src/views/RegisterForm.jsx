@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { register } from "../api/authservice"; // Adjust path if necessary
+import { registerService } from "../api/authservice";
 import logo from "../assets/logo.svg"
 
 const RegisterForm = () => {
@@ -20,11 +20,11 @@ const RegisterForm = () => {
     setLoading(true);
 
     try {
-      const response = await register(formData.email, formData.password);
+      const response = await registerService(formData.email, formData.password);
       console.log("Registration successful!", response);
 
       // **Navigate to login only if registration is successful**
-      if (response.success === true) { 
+      if (response.success === true) {
         navigate("/login");
       }
     } catch (err) {
@@ -38,10 +38,10 @@ const RegisterForm = () => {
     <div className="min-h-screen flex items-center justify-center">
       <div className="max-w-sm w-full bg-black p-6 rounded-xl shadow-lg">
         <img
-            src={logo} // Replace with your actual path
-            alt="Tinder Logo"
-            className="w-16 h-16 mx-auto mb-4"
-          />
+          src={logo} // Replace with your actual path
+          alt="Tinder Logo"
+          className="w-16 h-16 mx-auto mb-4"
+        />
         <h2 className="text-center text-3xl font-bold text-white mb-4">
           Create Account
         </h2>
@@ -73,9 +73,8 @@ const RegisterForm = () => {
 
           <button
             type="submit"
-            className={`w-full py-3 rounded-lg text-lg font-bold transition ${
-              loading ? "bg-gray-600 cursor-not-allowed" : "bg-red-500 hover:bg-red-600 text-white"
-            }`}
+            className={`w-full py-3 rounded-lg text-lg font-bold transition ${loading ? "bg-gray-600 cursor-not-allowed" : "bg-red-500 hover:bg-red-600 text-white"
+              }`}
             disabled={loading}
           >
             {loading ? "Creating..." : "Create"}
@@ -86,9 +85,9 @@ const RegisterForm = () => {
           Forgot password? <a href="#" className="text-red-500">Reset</a>
         </p>
         <p className="text-gray-400 text-center mt-2 text-sm">
-  Have an account?{" "}
-  <a href="/login" className="text-red-500">Login</a>
-</p>
+          Have an account?{" "}
+          <a href="/login" className="text-red-500">Login</a>
+        </p>
       </div>
     </div>
   );

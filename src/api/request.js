@@ -3,21 +3,12 @@ import axios from 'axios';
 const BASE_URL = 'http://localhost:3000/api';
 
 const getAuthToken = () => {
-  // guard against non-DOM contexts (workers, etc.)
-  if (
-    typeof window === "undefined" ||
-    !window.sessionStorage ||
-    typeof window.sessionStorage.getItem !== "function"
-  ) {
-    return null;
-  }
   try {
-    return window.sessionStorage.getItem("token");
+    return localStorage.getItem("token"); // ✅ Ahora busca en localStorage
   } catch (e) {
-    console.warn("SessionStorage unavailable:", e);
+    console.warn("LocalStorage unavailable:", e);
     return null;
   }
-
 };
 
 const buildQueryString = (params) => {

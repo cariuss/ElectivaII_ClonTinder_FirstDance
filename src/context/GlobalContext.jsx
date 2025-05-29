@@ -6,10 +6,12 @@ const GlobalContext = createContext(null);
 
 export const GlobalProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token"); // Unifica el almacenamiento
+    const token = localStorage.getItem("token");
     setUser({ isAuthenticated: !!token });
+    setLoading(false); // once token check is done
   }, []);
 
   const login = async (email, password) => {
@@ -33,7 +35,7 @@ export const GlobalProvider = ({ children }) => {
   };
 
   return (
-    <GlobalContext.Provider value={{ user, login, logout }}>
+    <GlobalContext.Provider value={{ user, login, logout, loading }}>
       {children}
     </GlobalContext.Provider>
   );

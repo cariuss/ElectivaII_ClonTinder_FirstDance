@@ -2,7 +2,7 @@ import request from "./request"
 
 const MODULE_PATH = "swipes"
 
-export const recordSwipe = async (targetUserId, swipeType) => {
+export const recordSwipe = async (swipeData) => {
     return await request(
         "post",
         `${MODULE_PATH}`,
@@ -10,8 +10,9 @@ export const recordSwipe = async (targetUserId, swipeType) => {
         {},
         "",
         {
-            targetUserId,
-            swipeType
+            userId: swipeData.userId,
+            targetUserId: swipeData.targetUserId,
+            swipeType: swipeData.swipeType,
         }
     )
 }

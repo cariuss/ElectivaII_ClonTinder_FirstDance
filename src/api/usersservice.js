@@ -59,19 +59,20 @@ export const updateAdditionalProfilePhotos = async (files) => {
     const formData = new FormData();
 
     files.forEach((file) => {
-        formData.append("additionalProfilePhotos", file); // ✅ Envía los archivos correctamente
+        formData.append("additionalProfilePhotos", file);
     });
 
     return await request(
         "patch",
-        "profile/additional-photos", // ✅ Asegúrate de que la ruta coincida con el backend
+        "users/profile/additional-photos",
         true,
         {},
         "",
-        formData,  // ✅ FormData en lugar de JSON
-        { "Content-Type": "multipart/form-data" }  // ✅ Indicar que se envían archivos
+        formData
     );
 };
+
+
 export const getPotentialMatches = async (lastId) => {
     return await request(
         "get",

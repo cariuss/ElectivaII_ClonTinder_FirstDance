@@ -2,6 +2,7 @@ import { useState } from "react";
 import Sidebar from "./SideBar"; // Sidebar will be created later
 import UserProfile from "../views/UserProfile";
 import MatchesChat from "../views/MatchesChat";
+import PotentialMatches from "../views/PotentialMatches";
 
 const Dashboard = () => {
   const [selectedView, setSelectedView] = useState("Home"); // Default view
@@ -14,6 +15,7 @@ const Dashboard = () => {
       {/* Main Content Area */}
       <div className="flex-1 p-6">
         <div className="mt-4">
+          {selectedView === "Home" && <PotentialMatches />}
           {selectedView === "Profile" && <UserProfile />}
           {selectedView === "Matches" && <MatchesChat />}
           {selectedView === "helpme" && <MatchesChat />}

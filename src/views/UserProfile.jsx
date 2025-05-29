@@ -9,7 +9,7 @@ const UserProfile = () => {
   const [error, setError] = useState("");
   const [isFillModalOpen, setIsFillModalOpen] = useState(false);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
-  const [newPhotoUrl, setNewPhotoUrl] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -34,20 +34,29 @@ const UserProfile = () => {
 
   // 🖼️ Agregar nueva foto
   const handleAddPhoto = async () => {
-    if (additionalPhotos.length >= 4) return; // Máximo de 4 fotos permitidas
+    if (additionalPhotos.length >= 4) return; // Max 4 photos
 
     try {
-      const filesArray = Array.from(newPhotoFiles); // ✅ Convertir archivos a array
+      if (!selectedFile || selectedFile.length === 0) {
+        alert("Please select at least one photo.");
+        return;
+      }
 
-      await updateAdditionalProfilePhotos(filesArray); // ✅ Enviar archivos al backend
+      await updateAdditionalProfilePhotos(selectedFile); // 👈 send FormData directly
 
+      // Update UI preview
       setUser((prevUser) => ({
         ...prevUser,
-        additionalPhotos: [...additionalPhotos, ...filesArray.map(file => URL.createObjectURL(file))], // ✅ Vista previa en la UI
+        additionalPhotos: [
+          ...additionalPhotos,
+          ...selectedFile.map(file => URL.createObjectURL(file))
+        ],
       }));
 
+
+      // Reset
       setIsPhotoModalOpen(false);
-      setNewPhotoFiles([]); // ✅ Limpiar archivos después de subirlos
+      setSelectedFile(null);
     } catch (error) {
       console.error("Error uploading photo:", error);
     }
@@ -121,10 +130,10 @@ const UserProfile = () => {
       <Modal isOpen={isPhotoModalOpen} onClose={() => setIsPhotoModalOpen(false)} title="Upload Photo">
         <div className="p-4 flex flex-col items-center">
           <input
-            type="text"
-            placeholder="Enter photo URL"
-            value={newPhotoUrl}
-            onChange={(e) => setNewPhotoUrl(e.target.value)}
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={(e) => setSelectedFile(Array.from(e.target.files))}
             className="w-full p-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-red-500"
           />
           <button

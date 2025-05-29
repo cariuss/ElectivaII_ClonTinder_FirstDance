@@ -27,8 +27,12 @@ const request = async (
 ) => {
   const url = `${BASE_URL}/${module}${urlParams ? `/${urlParams}` : ''}${buildQueryString(queryParams)}`;
 
+  // Detect if body is FormData
+  const isFormData = body instanceof FormData;
+
   const headers = {
-    'Content-Type': 'application/json',
+    // Only set JSON content-type if NOT sending FormData
+    ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
     ...(useAuth && { Authorization: `Bearer ${getAuthToken()}` }),
     ...extraHeaders,
   };
@@ -48,5 +52,6 @@ const request = async (
     throw err.response?.data || err.message;
   }
 };
+
 
 export default request;

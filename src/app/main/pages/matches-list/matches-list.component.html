@@ -1,0 +1,33 @@
+<div class="matches-page-container">
+  <div class="matches-sidebar">
+    <h2>Mis Matches</h2>
+    <div *ngIf="isLoading" class="loading-indicator">Cargando matches...</div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+    <ul class="matches-list" *ngIf="!isLoading && matches.length > 0">
+      <li *ngFor="let match of matches"
+          class="match-item"
+          [class.active]="selectedMatch?.id === match.id"
+          (click)="selectMatch(match)">
+        <span><strong>{{ match.targetUser.name }}</strong></span>
+        <span class="match-date">{{ match.createdAt | date:'short' }}</span>
+      </li>
+    </ul>
+
+    <div *ngIf="!isLoading && matches.length === 0" class="no-matches">
+      <p>Aún no tienes matches. ¡Ve a descubrir!</p>
+      <a routerLink="/main/discover">Ir a Descubrir</a>
+    </div>
+  </div>
+
+  <div class="chat-main-area">
+    <ng-container *ngIf="selectedMatch">
+      <app-chat-window [matchId]="selectedMatch.id" [chatPartner]="chatPartnerUser"></app-chat-window>
+    </ng-container>
+
+    <div *ngIf="!selectedMatch" class="select-match-placeholder">
+      <p>Selecciona un match para empezar a chatear.</p>
+      <img src="assets/chat-placeholder.png" alt="Chat Placeholder">
+      </div>
+  </div>
+</div>

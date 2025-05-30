@@ -1,0 +1,33 @@
+<div class="chat-window-container">
+  <div class="chat-header">
+    <h3 *ngIf="chatPartner">{{ chatPartner.name }}</h3>
+    <h3 *ngIf="!chatPartner">Chat</h3>
+  </div>
+
+  <div class="messages-container" #messagesContainer>
+    <div *ngIf="isLoadingMessages" class="loading-messages">Cargando mensajes...</div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+    <div *ngIf="messages.length === 0 && !isLoadingMessages && !errorMessage" class="no-messages-yet">
+      ¡Envía el primer mensaje!
+    </div>
+
+    <div *ngFor="let message of messages"
+         class="message"
+         [class.you]="message.senderId === currentUserId"
+         [class.other]="message.senderId !== currentUserId">
+      <div class="message-content">{{ message.content }}</div>
+      <div class="message-timestamp">{{ message.timestamp | date:'shortTime' }}</div>
+    </div>
+  </div>
+
+  <div class="chat-input-area">
+    <input
+      type="text"
+      [(ngModel)]="newMessage"
+      (keyup.enter)="sendMessage()"
+      placeholder="Escribe un mensaje..."
+      [disabled]="!matchId"
+    >
+    <button (click)="sendMessage()" [disabled]="!newMessage.trim() || !matchId">Enviar</button>
+  </div>
+</div>

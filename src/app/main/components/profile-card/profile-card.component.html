@@ -1,0 +1,22 @@
+<div class="profile-card-container"
+     *ngIf="user"
+     [@cardSwipe]="swipeState"
+     (@cardSwipe.done)="onAnimationDone($event)"
+     (panstart)="onPanStart($event)"
+     (pan)="onPan($event)"
+     (panend)="onPanEnd($event)">
+  <div class="profile-photo" [style.background-image]="'url(' + user.profilePhoto + ')'"></div>
+  <div class="profile-info">
+    <h3>{{ user.name }}, {{ user.age }}</h3>
+    <p class="location">{{ user.location.city }}, {{ user.location.country }}</p>
+    <p class="bio">{{ user.bio }}</p>
+    </div>
+  <div class="swipe-buttons">
+    <button class="dislike-button" (click)="doSwipeLeft()">👎</button>
+    <button class="like-button" (click)="doSwipeRight()">❤️</button>
+  </div>
+</div>
+
+<div *ngIf="!user" class="no-users-placeholder">
+  Cargando perfiles o no hay más usuarios disponibles...
+</div>

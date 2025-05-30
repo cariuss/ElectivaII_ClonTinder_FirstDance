@@ -1,0 +1,122 @@
+.matches-page-container {
+  display: flex;
+  min-height: calc(100vh - 80px); /* Ajusta por la altura de la navbar */
+  background-color: #f0f2f5;
+  box-sizing: border-box;
+
+  .matches-sidebar {
+    width: 300px;
+    background-color: #fff;
+    border-right: 1px solid #eee;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+
+    h2 {
+      color: #e94057;
+      margin-top: 0;
+      margin-bottom: 25px;
+      text-align: center;
+      font-size: 2em;
+    }
+
+    .loading-indicator, .error-message, .no-matches {
+      text-align: center;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .error-message {
+      background-color: #ffebee;
+      color: #d32f2f;
+    }
+
+    .matches-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      flex-grow: 1;
+      overflow-y: auto;
+
+      .match-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 10px;
+        border-bottom: 1px solid #f5f5f5;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+        border-radius: 5px;
+        margin-bottom: 5px;
+
+        &:hover {
+          background-color: #fce4ec;
+          transform: translateX(5px);
+        }
+
+        &.active {
+          background-color: #e94057;
+          color: #fff;
+          font-weight: bold;
+
+          span {
+            color: #fff;
+          }
+        }
+
+        span {
+          color: #333;
+        }
+
+        .match-date {
+          font-size: 0.85em;
+          color: #666;
+
+        }
+      }
+    }
+
+    .no-matches {
+      color: #666;
+      font-size: 1.1em;
+      margin-top: 20px;
+
+      a {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 8px 15px;
+        background-color: #e94057;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 20px;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: #d1304b;
+        }
+      }
+    }
+  }
+
+  .chat-main-area {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .select-match-placeholder {
+    text-align: center;
+    color: #888;
+    font-size: 1.3em;
+
+    img {
+      max-width: 200px;
+      opacity: 0.6;
+      margin-top: 30px;
+    }
+  }
+}

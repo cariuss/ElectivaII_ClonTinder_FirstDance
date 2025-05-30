@@ -1,0 +1,22 @@
+<div class="discover-page-container">
+  <h1>Descubrir</h1>
+
+  <div class="card-stack">
+    <app-profile-card
+      *ngIf="currentUser"
+      [user]="currentUser"
+      (swipeLeft)="onSwipe($event, 'dislike')"
+      (swipeRight)="onSwipe($event, 'like')"
+      (cardAnimationDone)="onCardAnimationDone()">
+    </app-profile-card>
+
+    <div *ngIf="!currentUser && isLoading" class="loading-indicator">
+      Cargando nuevos perfiles...
+    </div>
+
+    <div *ngIf="!currentUser && !isLoading && !hasMoreUsers" class="no-more-users">
+      <p>¡Oh! Parece que te quedaste sin perfiles por ahora.</p>
+      <p>Vuelve más tarde o ajusta tus preferencias de búsqueda.</p>
+    </div>
+  </div>
+</div>

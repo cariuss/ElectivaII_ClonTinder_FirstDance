@@ -11,7 +11,8 @@ const MatchesChat = () => {
     useEffect(() => {
         const token = localStorage.getItem("token");
 
-        // Fetch matches
+        // TODO: use the normal method of response and created the service
+        // TODO: use the real event to send info
         const fetchMatches = async () => {
             try {
                 const res = await fetch("http://localhost:3000/api/matches/history", {
@@ -37,12 +38,12 @@ const MatchesChat = () => {
     }, []);
 
     const joinChat = async (matchId) => {
-        setSelectedMatch(matchId);
+        setSelectedMatch(String(matchId));
         setMessages([]);
         if (socket) {
-            socket.emit("joinChat", { otherUserId: matchId });
+            socket.emit("joinChat", { otherUserId: String(matchId) });
             socket.on("receiveMessage", (data) => {
-                setMessages((prev) => [...prev, { sender: data.senderId, content: data.content }]);
+                setMessages((prev) => [...prev, { sender: String(data.senderId), content: data.content }]);
             });
         }
     };

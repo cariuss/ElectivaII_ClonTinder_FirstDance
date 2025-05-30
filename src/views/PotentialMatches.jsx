@@ -39,11 +39,8 @@ export default function PotentialMatches() {
 
     const handleSwipe = async (swipeType) => {
         if (!currentUser) return;
-        //TODO: how to get the loggedinuserid
-        const loggedInUserId = 316908131986702336;
 
         const newSwipe = {
-            userId: loggedInUserId,
             targetUserId: Number(currentUser.id),
             swipeType,
         };

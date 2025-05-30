@@ -17,13 +17,11 @@ export default function PotentialMatches() {
     const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
     const [swipes, setSwipes] = useState([]);
     const [loading, setLoading] = useState(true);
-
     useEffect(() => {
         const fetchMatches = async () => {
             setLoading(true);
             try {
-                const data = await getPotentialMatches(); // or pass lastId if needed
-                console.log(data.data.users)
+                const data = await getPotentialMatches();
                 setUsers(data.data.users || []);
             } catch (error) {
                 console.error("Failed to fetch users", error);
@@ -41,7 +39,7 @@ export default function PotentialMatches() {
         if (!currentUser) return;
 
         const newSwipe = {
-            targetUserId: Number(currentUser.id),
+            targetUserId: String(currentUser.id),
             swipeType,
         };
 

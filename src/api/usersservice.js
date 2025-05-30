@@ -41,19 +41,20 @@ export const updateProfile = async (profileData) => {
     );
 };
 
-export const updatePhoto = async (profilePhoto) => {
+export const updateProfilePhoto = async (profilePhoto) => {
+    const formData = new FormData();
+    formData.append("profilePhoto", profilePhoto);
+
     return await request(
         "patch",
         `${MODULE_PATH}/profile/photo`,
         true,
         {},
         "",
-        {
-            profilePhoto
-        },
-        {}
-    )
-}
+        formData
+    );
+};
+
 
 export const updateAdditionalProfilePhotos = async (files) => {
     const formData = new FormData();

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getProfile, updateAdditionalProfilePhotos } from "../api/usersservice";
+import { getProfile, updateAdditionalProfilePhotos, updateProfilePhoto } from "../api/usersservice"; // <-- import the new API call
 import Modal from "../components/Modal";
 import FillData from "./FillData";
 
@@ -10,6 +10,10 @@ const UserProfile = () => {
   const [isFillModalOpen, setIsFillModalOpen] = useState(false);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+
+  // New states for profile photo modal:
+  const [isProfilePhotoModalOpen, setIsProfilePhotoModalOpen] = useState(false);
+  const [profilePhotoFile, setProfilePhotoFile] = useState(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -32,7 +36,7 @@ const UserProfile = () => {
 
   const additionalPhotos = user?.additionalPhotos || [];
 
-  // 🖼️ Agregar nueva foto
+  // Upload additional photos (existing)
   const handleAddPhoto = async () => {
     if (additionalPhotos.length >= 4) return; // Max 4 photos
 
@@ -42,19 +46,16 @@ const UserProfile = () => {
         return;
       }
 
-      await updateAdditionalProfilePhotos(selectedFile); // 👈 send FormData directly
+      await updateAdditionalProfilePhotos(selectedFile);
 
-      // Update UI preview
       setUser((prevUser) => ({
         ...prevUser,
         additionalPhotos: [
           ...additionalPhotos,
-          ...selectedFile.map(file => URL.createObjectURL(file))
+          ...selectedFile.map((file) => URL.createObjectURL(file)),
         ],
       }));
 
-
-      // Reset
       setIsPhotoModalOpen(false);
       setSelectedFile(null);
     } catch (error) {
@@ -62,6 +63,28 @@ const UserProfile = () => {
     }
   };
 
+  // New: Update profile photo handler
+  const handleUpdateProfilePhoto = async () => {
+    if (!profilePhotoFile) {
+      alert("Please select a photo.");
+      return;
+    }
+
+    try {
+      await updateProfilePhoto(profilePhotoFile); // send FormData with the single file
+
+      // Update UI preview: create URL from uploaded file (or you can re-fetch user profile for fresh data)
+      setUser((prevUser) => ({
+        ...prevUser,
+        profilePhoto: URL.createObjectURL(profilePhotoFile),
+      }));
+
+      setIsProfilePhotoModalOpen(false);
+      setProfilePhotoFile(null);
+    } catch (error) {
+      console.error("Error updating profile photo:", error);
+    }
+  };
 
   return (
     <div className="bg-gray-800 p-6 rounded-lg shadow-lg text-white w-full flex flex-col gap-6">
@@ -72,11 +95,33 @@ const UserProfile = () => {
           <h2 className="text-2xl font-bold text-center mb-4">Profile</h2>
           {user && (
             <div className="space-y-3">
-              <img src={user.profilePhoto} alt="Profile" className="w-24 h-24 rounded-full mx-auto" />
-              <p><strong>Name:</strong> {user.name}</p>
-              <p><strong>Age:</strong> {user.age}</p>
-              <p><strong>Gender:</strong> {user.gender}</p>
-              <p><strong>Bio:</strong> {user.bio}</p>
+              <div className="relative w-24 h-24 mx-auto">
+                <img
+                  src={user.profilePhoto}
+                  alt="Profile"
+                  className="w-24 h-24 rounded-full"
+                />
+                {/* Button to open modal to update profile photo */}
+                <button
+                  onClick={() => setIsProfilePhotoModalOpen(true)}
+                  className="absolute bottom-0 right-0 bg-red-500 rounded-full p-1 hover:bg-red-600 transition"
+                  title=""
+                >
+                  ✏️
+                </button>
+              </div>
+              <p>
+                <strong>Name:</strong> {user.name}
+              </p>
+              <p>
+                <strong>Age:</strong> {user.age}
+              </p>
+              <p>
+                <strong>Gender:</strong> {user.gender}
+              </p>
+              <p>
+                <strong>Bio:</strong> {user.bio}
+              </p>
 
               {/* Edit Profile Button */}
               <button
@@ -98,11 +143,14 @@ const UserProfile = () => {
                 key={index}
                 className="w-24 h-24 bg-gray-700 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-600 transition"
               >
-                <img src={photo} alt={`Additional ${index}`} className="w-full h-full object-cover rounded-lg" />
+                <img
+                  src={photo}
+                  alt={`Additional ${index}`}
+                  className="w-full h-full object-cover rounded-lg"
+                />
               </div>
             ))}
 
-            {/* Botón "Agregar Foto" solo si hay menos de 4 fotos */}
             {additionalPhotos.length < 4 && (
               <div
                 className="w-24 h-24 bg-gray-700 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-600 transition"
@@ -127,7 +175,11 @@ const UserProfile = () => {
       </Modal>
 
       {/* Modal para agregar una nueva foto */}
-      <Modal isOpen={isPhotoModalOpen} onClose={() => setIsPhotoModalOpen(false)} title="Upload Photo">
+      <Modal
+        isOpen={isPhotoModalOpen}
+        onClose={() => setIsPhotoModalOpen(false)}
+        title="Upload Photo"
+      >
         <div className="p-4 flex flex-col items-center">
           <input
             type="file"
@@ -141,6 +193,28 @@ const UserProfile = () => {
             className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg font-bold mt-4"
           >
             Add Photo
+          </button>
+        </div>
+      </Modal>
+
+      {/* Modal para actualizar la foto de perfil */}
+      <Modal
+        isOpen={isProfilePhotoModalOpen}
+        onClose={() => setIsProfilePhotoModalOpen(false)}
+        title="Update Profile Photo"
+      >
+        <div className="p-4 flex flex-col items-center">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setProfilePhotoFile(e.target.files[0])}
+            className="w-full p-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-red-500"
+          />
+          <button
+            onClick={handleUpdateProfilePhoto}
+            className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg font-bold mt-4"
+          >
+            Update Photo
           </button>
         </div>
       </Modal>

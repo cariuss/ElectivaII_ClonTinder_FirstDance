@@ -31,12 +31,9 @@ export class MatchesListComponent implements OnInit, OnDestroy {
     this.loadMatches();
     this.chatService.connect();
 
-
     this.chatService.getJoinedRoom()
       .pipe(takeUntil(this.destroy$))
       .subscribe(payload => {
-
-
         console.log(`Unido a la sala: ${payload.roomId}`);
       });
   }
@@ -55,14 +52,6 @@ export class MatchesListComponent implements OnInit, OnDestroy {
       }
     });
   }
-
-
-
-
-
-
-
-
 
   async selectMatch(match: MatchHistory): Promise<void> {
     this.selectedMatch = match;

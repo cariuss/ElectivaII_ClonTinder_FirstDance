@@ -46,10 +46,10 @@ export class ChatWindowComponent implements OnInit, OnChanges, OnDestroy {
     this.chatService.getMessages()
       .pipe(takeUntil(this.destroy$))
       .subscribe((message: Message) => {
-        if (message.matchId === this.matchId) {
-          this.messages.push(message);
-          this.scrollToBottom();
-        }
+
+        this.messages.push(message);
+        this.scrollToBottom();
+
       });
   }
 

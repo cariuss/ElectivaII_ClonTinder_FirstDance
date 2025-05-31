@@ -35,7 +35,7 @@ export class ChatService implements OnDestroy {
       auth: {
         token: `Bearer ${token}`,
       },
-      transports: ['websocket', 'polling']
+      transports: ['websocket']
     });
 
     this.socket.on('connect', () => {

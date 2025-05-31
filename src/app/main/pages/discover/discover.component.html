@@ -1,22 +1,37 @@
-<div class="discover-page-container">
-  <h1>Descubrir</h1>
+<div class="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-pink-50 to-white">
+  <!-- Título -->
+  <h1 class="text-4xl font-extrabold text-[#e94057] mb-10">
+    Descubrir
+  </h1>
 
-  <div class="card-stack">
+  <!-- Stack de tarjetas -->
+  <div class="relative w-80 h-[600px] flex items-center justify-center">
+    <!-- Perfil activo -->
     <app-profile-card
       *ngIf="currentUser"
       [user]="currentUser"
       (swipeLeft)="onSwipe($event, 'dislike')"
       (swipeRight)="onSwipe($event, 'like')"
-      (cardAnimationDone)="onCardAnimationDone()">
-    </app-profile-card>
+      (cardAnimationDone)="onCardAnimationDone()"
+      class="absolute inset-0"
+    ></app-profile-card>
 
-    <div *ngIf="!currentUser && isLoading" class="loading-indicator">
+    <!-- Cargando -->
+    <div
+      *ngIf="!currentUser && isLoading"
+      class="absolute inset-0 flex items-center justify-center bg-white rounded-xl shadow-lg text-gray-600 text-lg p-6 text-center"
+    >
       Cargando nuevos perfiles...
     </div>
 
-    <div *ngIf="!currentUser && !isLoading && !hasMoreUsers" class="no-more-users">
-      <p>¡Oh! Parece que te quedaste sin perfiles por ahora.</p>
-      <p>Vuelve más tarde o ajusta tus preferencias de búsqueda.</p>
+    <!-- Sin más usuarios -->
+    <div
+      *ngIf="!currentUser && !isLoading && !hasMoreUsers"
+      class="absolute inset-0 flex flex-col items-center justify-center bg-white rounded-xl shadow-lg text-gray-600 text-center p-6 space-y-2"
+    >
+      <p class="text-xl font-semibold">¡Oh!</p>
+      <p>Parece que te quedaste sin perfiles por ahora.</p>
+      <p class="text-sm">Vuelve más tarde o ajusta tus preferencias de búsqueda.</p>
     </div>
   </div>
 </div>

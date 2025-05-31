@@ -1,11 +1,60 @@
-<nav class="navbar">
-  <div class="navbar-brand">
-    <a routerLink="/main/discover">🔥 Tinder Clone</a>
-  </div>
-  <div class="navbar-links">
-    <a routerLink="/main/discover" routerLinkActive="active">Descubrir</a>
-    <a routerLink="/main/matches" routerLinkActive="active">Chat</a>
-    <a routerLink="/main/profile" routerLinkActive="active">Mi Perfil</a>
-    <button (click)="onLogout()">Cerrar Sesión</button>
+<nav class="fixed top-0 left-0 w-full bg-white border-b border-gray-200 shadow-sm z-50">
+  <div class="max-w-screen-xl mx-auto px-4 flex items-center justify-between h-16">
+    <!-- Logo / Marca -->
+    <a
+      routerLink="/main/discover"
+      class="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+    >
+      <span class="text-3xl">🔥</span>
+      <span class="text-xl font-bold text-red-500">Tinder Clone</span>
+    </a>
+
+    <!-- Links -->
+    <div class="flex items-center space-x-8">
+      <a
+        routerLink="/main/discover"
+        routerLinkActive="text-red-500 font-semibold"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="relative text-gray-600 hover:text-red-500 transition"
+      >
+        Descubrir
+        <span
+          class="absolute bottom-0 left-0 w-full h-0.5 bg-red-500 scale-x-0 transition-transform origin-left"
+          routerLinkActive
+        ></span>
+      </a>
+
+      <a
+        routerLink="/main/matches"
+        routerLinkActive="text-red-500 font-semibold"
+        class="relative text-gray-600 hover:text-red-500 transition"
+      >
+        Chat
+        <span
+          class="absolute bottom-0 left-0 w-full h-0.5 bg-red-500 scale-x-0 transition-transform origin-left"
+          routerLinkActive
+        ></span>
+      </a>
+
+      <a
+        routerLink="/main/profile"
+        routerLinkActive="text-red-500 font-semibold"
+        class="relative text-gray-600 hover:text-red-500 transition"
+      >
+        Mi Perfil
+        <span
+          class="absolute bottom-0 left-0 w-full h-0.5 bg-red-500 scale-x-0 transition-transform origin-left"
+          routerLinkActive
+        ></span>
+      </a>
+
+      <!-- Logout -->
+      <button
+        (click)="onLogout()"
+        class="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded-full text-sm font-semibold transition"
+      >
+        Cerrar Sesión
+      </button>
+    </div>
   </div>
 </nav>

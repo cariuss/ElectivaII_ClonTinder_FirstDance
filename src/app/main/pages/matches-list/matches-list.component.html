@@ -1,33 +1,58 @@
-<div class="matches-page-container">
-  <div class="matches-sidebar">
-    <h2>Mis Matches</h2>
-    <div *ngIf="isLoading" class="loading-indicator">Cargando matches...</div>
-    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+<!-- src/app/main/pages/matches/matches-page.component.html -->
+<div class="flex h-screen bg-gray-100">
+  <!-- Sidebar: 1/4 del ancho -->
+  <aside class="w-1/4 bg-white border-r border-gray-200 flex flex-col">
+    <h2 class="text-center text-red-500 text-2xl font-bold mt-6 mb-4">Mis Matches</h2>
 
-    <ul class="matches-list" *ngIf="!isLoading && matches.length > 0">
-      <li *ngFor="let match of matches"
-          class="match-item"
-          [class.active]="selectedMatch?.id === match.id"
-          (click)="selectMatch(match)">
-        <span><strong>{{ match.targetUser.name }}</strong></span>
-        <span class="match-date">{{ match.createdAt | date:'short' }}</span>
+    <!-- Indicador cargando -->
+    <div *ngIf="isLoading" class="text-center text-gray-600 p-4">
+      Cargando matches...
+    </div>
+    <!-- Mensaje de error -->
+    <div *ngIf="errorMessage" class="text-center text-red-700 bg-red-100 p-4 rounded mx-4 mb-4">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Lista de matches -->
+    <ul *ngIf="!isLoading && matches.length > 0" class="flex-1 overflow-y-auto pr-2">
+      <li
+        *ngFor="let match of matches"
+        (click)="selectMatch(match)"
+        [class.bg-red-100]="selectedMatch?.id === match.id"
+        class="flex justify-between items-center px-4 py-3 cursor-pointer hover:bg-red-50 transition mb-1 rounded"
+      >
+        <span class="font-medium text-gray-800">{{ match.targetUser.name }}</span>
+        <span class="text-xs text-gray-500">{{ match.createdAt | date:'short' }}</span>
       </li>
     </ul>
 
-    <div *ngIf="!isLoading && matches.length === 0" class="no-matches">
+    <!-- Si no hay matches -->
+    <div *ngIf="!isLoading && matches.length === 0" class="text-center text-gray-600 p-4">
       <p>Aún no tienes matches. ¡Ve a descubrir!</p>
-      <a routerLink="/main/discover">Ir a Descubrir</a>
+      <a routerLink="/main/discover"
+         class="inline-block mt-2 px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition">
+        Ir a Descubrir
+      </a>
     </div>
-  </div>
+  </aside>
 
-  <div class="chat-main-area">
-    <ng-container *ngIf="selectedMatch">
-      <app-chat-window [matchId]="selectedMatch.id" [chatPartner]="chatPartnerUser"></app-chat-window>
+  <!-- Área de chat: 3/4 del ancho -->
+  <section class="w-3/4 flex">
+    <ng-container *ngIf="selectedMatch; else placeholder">
+      <app-chat-window
+        [matchId]="selectedMatch.id"
+        [chatPartner]="chatPartnerUser"
+        class="w-full h-full"
+      ></app-chat-window>
     </ng-container>
 
-    <div *ngIf="!selectedMatch" class="select-match-placeholder">
-      <p>Selecciona un match para empezar a chatear.</p>
-      <img src="assets/chat-placeholder.png" alt="Chat Placeholder">
+    <!-- Placeholder cuando no hay match seleccionado -->
+    <ng-template #placeholder>
+      <div class="flex-1 flex flex-col justify-center items-center bg-white">
+        <p class="text-gray-500 text-lg">Selecciona un match para empezar a chatear.</p>
+        <img src="assets/chat-placeholder.png" alt="Chat Placeholder"
+             class="mt-6 opacity-40 w-1/4"/>
       </div>
-  </div>
+    </ng-template>
+  </section>
 </div>

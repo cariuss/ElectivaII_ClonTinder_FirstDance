@@ -1,29 +1,82 @@
-<div class="register-container">
-  <h2>Registrarse</h2>
-  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="email">Email:</label>
-      <input type="email" id="email" formControlName="email">
-      <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error-message">
-        <span *ngIf="registerForm.get('email')?.errors?.['required']">El email es obligatorio.</span>
-        <span *ngIf="registerForm.get('email')?.errors?.['email']">Introduce un email válido.</span>
+<!-- Fondo degradado tipo Tinder -->
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-400 to-red-500 p-4">
+  <!-- Tarjeta principal -->
+  <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md mx-auto overflow-hidden">
+    <!-- Encabezado con logo circular -->
+    <div class="bg-white flex justify-center pt-8">
+      <div class="w-24 h-24 bg-red-500 rounded-full flex items-center justify-center shadow-lg">
+        <!-- Logo Tinder (o tu icono) -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.372 0 .043 5.329.043 11.957c0 6.628 11.957 12.043 11.957 12.043s11.957-5.415 11.957-12.043C23.957 5.329 18.628 0 12 0zm.597 18.478c-3.815 0-6.92-3.15-6.92-6.92 0-3.77 3.105-6.92 6.92-6.92 3.77 0 6.92 3.15 6.92 6.92 0 3.77-3.15 6.92-6.92 6.92z"/>
+        </svg>
       </div>
     </div>
 
-    <div class="form-group">
-      <label for="password">Contraseña:</label>
-      <input type="password" id="password" formControlName="password">
-      <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error-message">
-        <span *ngIf="registerForm.get('password')?.errors?.['required']">La contraseña es obligatoria.</span>
-        <span *ngIf="registerForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.</span>
+    <!-- Formulario de registro -->
+    <form
+      [formGroup]="registerForm"
+      (ngSubmit)="onSubmit()"
+      class="px-8 pb-10 pt-6 flex flex-col gap-6"
+    >
+      <h2 class="text-center text-2xl font-bold text-gray-700">Crea tu cuenta</h2>
+
+      <!-- Email -->
+      <div class="relative">
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          placeholder="Correo electrónico"
+          class="w-full px-4 py-3 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition text-gray-700"
+        />
+        <small
+          *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+          class="absolute text-sm text-red-500 mt-1"
+        >
+          <span *ngIf="registerForm.get('email')?.errors?.['required']">Requerido.</span>
+          <span *ngIf="registerForm.get('email')?.errors?.['email']">Email inválido.</span>
+        </small>
       </div>
-    </div>
 
-    <button type="submit" [disabled]="registerForm.invalid">Registrarse</button>
+      <!-- Contraseña -->
+      <div class="relative">
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          placeholder="Contraseña (mín. 6 caracteres)"
+          class="w-full px-4 py-3 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-transparent transition text-gray-700"
+        />
+        <small
+          *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+          class="absolute text-sm text-red-500 mt-1"
+        >
+          <span *ngIf="registerForm.get('password')?.errors?.['required']">Requerido.</span>
+          <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Mínimo 6 caracteres.</span>
+        </small>
+      </div>
 
-    <div *ngIf="errorMessage" class="api-error-message">
-      {{ errorMessage }}
-    </div>
-  </form>
-  <p>¿Ya tienes una cuenta? <a routerLink="/auth/login">Inicia sesión aquí</a></p>
+      <!-- Botón de registro -->
+      <button
+        type="submit"
+        [disabled]="registerForm.invalid"
+        class="mt-4 w-full py-3 rounded-full bg-red-500 hover:bg-red-600 disabled:bg-gray-300 text-white font-semibold transition"
+      >
+        Registrarse
+      </button>
+
+      <!-- Error API -->
+      <div *ngIf="errorMessage" class="text-center text-red-500 font-medium">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Link a login -->
+      <p class="text-center text-gray-500 text-sm">
+        ¿Ya tienes cuenta?
+        <a routerLink="/auth/login" class="text-red-500 font-semibold hover:underline">
+          Inicia sesión
+        </a>
+      </p>
+    </form>
+  </div>
 </div>

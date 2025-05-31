@@ -1,33 +1,70 @@
-<div class="chat-window-container">
-  <div class="chat-header">
-    <h3 *ngIf="chatPartner">{{ chatPartner.name }}</h3>
-    <h3 *ngIf="!chatPartner">Chat</h3>
-  </div>
+<!-- src/app/main/pages/chat/chat-window.component.html -->
+<div class="flex flex-col w-full h-full bg-white rounded-lg overflow-hidden shadow-md">
+  <!-- Header -->
+  <header class="bg-gray-50 px-5 py-4 border-b border-gray-200 text-center">
+    <h3 class="text-red-500 text-lg font-semibold" *ngIf="chatPartner">
+      {{ chatPartner.name }}
+    </h3>
+    <h3 class="text-red-500 text-lg font-semibold" *ngIf="!chatPartner">Chat</h3>
+  </header>
 
-  <div class="messages-container" #messagesContainer>
-    <div *ngIf="isLoadingMessages" class="loading-messages">Cargando mensajes...</div>
-    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
-    <div *ngIf="messages.length === 0 && !isLoadingMessages && !errorMessage" class="no-messages-yet">
+  <!-- Mensajes -->
+  <div
+    #messagesContainer
+    class="flex-1 px-5 py-4 overflow-y-auto flex flex-col bg-gray-100"
+  >
+    <!-- Indicador de carga -->
+    <div *ngIf="isLoadingMessages" class="text-center text-gray-600 p-3 rounded-lg mb-3">
+      Cargando mensajes...
+    </div>
+
+    <!-- Mensaje de error -->
+    <div *ngIf="errorMessage" class="text-center text-red-700 bg-red-100 p-3 rounded-lg mb-3">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Sin mensajes -->
+    <div
+      *ngIf="messages.length === 0 && !isLoadingMessages && !errorMessage"
+      class="text-center text-gray-600 p-3 rounded-lg mb-3"
+    >
       ¡Envía el primer mensaje!
     </div>
 
-    <div *ngFor="let message of messages"
-         class="message"
-         [class.you]="message.senderId === currentUserId"
-         [class.other]="message.senderId !== currentUserId">
-      <div class="message-content">{{ message.content }}</div>
-      <div class="message-timestamp">{{ message.timestamp | date:'shortTime' }}</div>
+    <!-- Bucle de mensajes -->
+    <div
+      *ngFor="let message of messages"
+      class="max-w-[70%] mb-2 px-4 py-2 rounded-xl break-words shadow-sm"
+      [ngClass]="{
+        'bg-red-200 text-red-800 self-end rounded-br-sm': message.senderId === currentUserId,
+        'bg-gray-200 text-gray-700 self-start rounded-bl-sm': message.senderId !== currentUserId
+      }"
+    >
+      <div class="text-base">
+        {{ message.content }}
+      </div>
+      <div class="text-xs opacity-80 mt-1 text-right">
+        {{ message.timestamp | date: 'shortTime' }}
+      </div>
     </div>
   </div>
 
-  <div class="chat-input-area">
+  <!-- Área de entrada de texto -->
+  <div class="px-5 py-4 border-t border-gray-200 flex items-center gap-3 bg-gray-50">
     <input
       type="text"
       [(ngModel)]="newMessage"
       (keyup.enter)="sendMessage()"
       placeholder="Escribe un mensaje..."
       [disabled]="!matchId"
+      class="flex-1 px-4 py-3 border border-gray-300 rounded-full text-base focus:outline-none focus:border-red-300 transition"
+    />
+    <button
+      (click)="sendMessage()"
+      [disabled]="!newMessage.trim() || !matchId"
+      class="px-5 py-3 bg-red-300 text-red-900 rounded-full font-semibold text-base transition hover:bg-red-400 disabled:bg-gray-300 disabled:cursor-not-allowed"
     >
-    <button (click)="sendMessage()" [disabled]="!newMessage.trim() || !matchId">Enviar</button>
+      Enviar
+    </button>
   </div>
 </div>

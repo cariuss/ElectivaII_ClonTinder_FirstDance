@@ -1,137 +1,283 @@
-<div class="profile-container">
-  <h1>Mi Perfil</h1>
+<!-- src/app/main/pages/profile/profile.component.html -->
+<div class="flex flex-col items-center p-6 bg-gray-100 min-h-screen box-border">
+  <!-- ================================================================== -->
+  <!-- Header y botones principales (Foto de Perfil y Carrusel Adicionales) -->
+  <!-- ================================================================== -->
+  <div class="w-full max-w-2xl flex flex-col sm:flex-row items-center justify-between mb-8">
+    <h1 class="text-pink-600 text-4xl font-extrabold mb-4 sm:mb-0">Mi Perfil</h1>
+    <div class="flex flex-col sm:flex-row gap-3">
+      <!-- Botón Cambiar Foto de Perfil -->
+      <button
+        type="button"
+        (click)="openProfilePhotoModal()"
+        class="inline-flex items-center justify-center bg-gradient-to-r from-pink-500 to-pink-700 hover:from-pink-600 hover:to-pink-800 text-white font-semibold py-2 px-4 sm:py-3 sm:px-5 rounded-full shadow-lg transition-transform transform hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-pink-300"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 4v16h16V4H4zm2 2h12v12H6V6zm4 3a3 3 0 100 6 3 3 0 000-6zm0 0V9m0 0h.01" />
+        </svg>
+        Cambiar Foto
+      </button>
 
-  <div *ngIf="isLoading" class="loading-indicator">Cargando perfil...</div>
-  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
-  <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+      <!-- Botón para disparar el input-carrusel -->
+      <button
+        type="button"
+        (click)="triggerAdditionalPhotosInput()"
+        class="inline-flex items-center justify-center bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 text-white font-semibold py-2 px-4 sm:py-3 sm:px-5 rounded-full shadow-lg transition-transform transform hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-indigo-300"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 4v16m8-8H4" />
+        </svg>
+        Añadir Fotos Extras
+      </button>
 
-  <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()">
-    <div class="profile-section">
-      <h2>Información Básica</h2>
-      <div class="form-group">
-        <label for="name">Nombre:</label>
-        <input id="name" type="text" formControlName="name">
-        <div *ngIf="profileForm.get('name')?.invalid && profileForm.get('name')?.touched" class="validation-error">
-          El nombre es obligatorio.
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="age">Edad:</label>
-        <input id="age" type="number" formControlName="age">
-        <div *ngIf="profileForm.get('age')?.invalid && profileForm.get('age')?.touched" class="validation-error">
-          <span *ngIf="profileForm.get('age')?.errors?.['required']">La edad es obligatoria.</span>
-          <span *ngIf="profileForm.get('age')?.errors?.['min'] || profileForm.get('age')?.errors?.['max']">La edad debe estar entre 18 y 100.</span>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="gender">Género:</label>
-        <select id="gender" formControlName="gender">
-          <option value="">Selecciona tu género</option>
-          <option value="Male">Masculino</option>
-          <option value="Female">Femenino</option>
-          <option value="other">Otro</option>
-        </select>
-        <div *ngIf="profileForm.get('gender')?.invalid && profileForm.get('gender')?.touched" class="validation-error">
-          El género es obligatorio.
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="bio">Biografía:</label>
-        <textarea id="bio" formControlName="bio" rows="4"></textarea>
-        <div *ngIf="profileForm.get('bio')?.invalid && profileForm.get('bio')?.touched" class="validation-error">
-          <span *ngIf="profileForm.get('bio')?.errors?.['required']">La biografía es obligatoria.</span>
-          <span *ngIf="profileForm.get('bio')?.errors?.['maxlength']">La biografía no puede exceder 500 caracteres.</span>
-        </div>
-      </div>
+      <!-- Input oculto de selección múltiple -->
+      <input
+        #additionalPhotosInput
+        type="file"
+        multiple
+        accept="image/*"
+        class="hidden"
+        (change)="onAdditionalPhotosSelected($event)"
+      />
     </div>
-
-    <div class="profile-section">
-      <h2>Preferencias de Búsqueda</h2>
-      <div class="form-group">
-        <label for="minAge">Edad mínima:</label>
-        <input id="minAge" type="number" formControlName="minAge">
-        <div *ngIf="profileForm.get('minAge')?.invalid && profileForm.get('minAge')?.touched" class="validation-error">
-          La edad mínima es obligatoria y debe ser al menos 18.
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="maxAge">Edad máxima:</label>
-        <input id="maxAge" type="number" formControlName="maxAge">
-        <div *ngIf="profileForm.get('maxAge')?.invalid && profileForm.get('maxAge')?.touched" class="validation-error">
-          La edad máxima es obligatoria y debe ser al menos 18.
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="interestedInGender">Interesado en:</label>
-        <select id="interestedInGender" formControlName="interestedInGender">
-          <option value="">Selecciona</option>
-          <option value="Male">Hombres</option>
-          <option value="Female">Mujeres</option>
-          <option value="other">Otros</option>
-        </select>
-        <div *ngIf="profileForm.get('interestedInGender')?.invalid && profileForm.get('interestedInGender')?.touched" class="validation-error">
-          Este campo es obligatorio.
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="maxDistance">Distancia máxima (km):</label>
-        <input id="maxDistance" type="number" formControlName="maxDistance">
-        <div *ngIf="profileForm.get('maxDistance')?.invalid && profileForm.get('maxDistance')?.touched" class="validation-error">
-          La distancia máxima es obligatoria y debe ser al menos 1.
-        </div>
-      </div>
-    </div>
-
-    <div class="profile-section">
-      <h2>Ubicación</h2>
-      <div class="form-group">
-        <label for="city">Ciudad:</label>
-        <input id="city" type="text" formControlName="city">
-        <div *ngIf="profileForm.get('city')?.invalid && profileForm.get('city')?.touched" class="validation-error">
-          La ciudad es obligatoria.
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="country">País:</label>
-        <input id="country" type="text" formControlName="country">
-        <div *ngIf="profileForm.get('country')?.invalid && profileForm.get('country')?.touched" class="validation-error">
-          El país es obligatorio.
-        </div>
-      </div>
-    </div>
-
-    <button type="submit" [disabled]="profileForm.invalid || isLoading">Guardar Perfil</button>
-  </form>
-
-  <hr>
-
-  <div class="profile-section photo-upload-section">
-    <h2>Foto de Perfil</h2>
-    <div class="current-photo" *ngIf="profileForm.get('profilePhotoUrl')?.value">
-      <img [src]="profileForm.get('profilePhotoUrl')?.value" alt="Foto de Perfil Actual">
-    </div>
-    <div class="form-group">
-      <label for="profilePhoto">Cambiar Foto de Perfil:</label>
-      <input id="profilePhoto" type="file" (change)="onProfilePhotoSelected($event)" accept="image/*">
-    </div>
-    <button (click)="onUploadProfilePhoto()" [disabled]="!profilePhotoFile || isLoading">Subir Foto de Perfil</button>
   </div>
 
-  <hr>
+  <!-- Mensajes (Cargando, Error, Éxito) -->
+  <div *ngIf="isLoading" class="p-3 rounded-lg mb-4 w-full max-w-2xl text-center font-semibold bg-blue-100 text-blue-600">
+    Cargando perfil...
+  </div>
+  <div *ngIf="errorMessage" class="p-3 rounded-lg mb-4 w-full max-w-2xl text-center font-semibold bg-red-100 text-red-600">
+    {{ errorMessage }}
+  </div>
+  <div *ngIf="successMessage" class="p-3 rounded-lg mb-4 w-full max-w-2xl text-center font-semibold bg-green-100 text-green-600">
+    {{ successMessage }}
+  </div>
 
-  <div class="profile-section photo-upload-section">
-    <h2>Fotos Adicionales</h2>
-    <div class="form-group">
-      <label for="additionalPhotos">Añadir Fotos Adicionales:</label>
-      <input id="additionalPhotos" type="file" (change)="onAdditionalPhotosSelected($event)" multiple accept="image/*">
+  <!-- ================================================================== -->
+  <!-- Formulario principal (Información Básica, Preferencias, Ubicación)  -->
+  <!-- ================================================================== -->
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()" class="bg-white p-6 sm:p-8 rounded-xl shadow-lg w-full max-w-2xl flex flex-col gap-6">
+    <!-- Información Básica -->
+    <div class="flex flex-col gap-4 w-full">
+      <h2 class="text-pink-600 mb-3 text-2xl font-bold border-b-2 border-gray-100 pb-2 w-full">Información Básica</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 items-center">
+        <!-- Nombre -->
+        <div class="flex flex-col">
+          <label for="name" class="text-gray-700 font-semibold mb-1">Nombre</label>
+          <input id="name" type="text" formControlName="name"
+            class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-600 focus:border-transparent w-full" />
+          <div *ngIf="profileForm.get('name')?.invalid && profileForm.get('name')?.touched" class="text-red-600 text-xs mt-1">
+            El nombre es obligatorio.
+          </div>
+        </div>
+        <!-- Edad -->
+        <div class="flex flex-col">
+          <label for="age" class="text-gray-700 font-semibold mb-1">Edad</label>
+          <input id="age" type="number" formControlName="age"
+            class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-600 focus:border-transparent w-full" />
+          <div *ngIf="profileForm.get('age')?.invalid && profileForm.get('age')?.touched" class="text-red-600 text-xs mt-1">
+            <span *ngIf="profileForm.get('age')?.errors?.['required']">La edad es obligatoria.</span>
+            <span *ngIf="profileForm.get('age')?.errors?.['min'] || profileForm.get('age')?.errors?.['max']">
+              Debe estar entre 18 y 100.
+            </span>
+          </div>
+        </div>
+        <!-- Género -->
+        <div class="flex flex-col">
+          <label for="gender" class="text-gray-700 font-semibold mb-1">Género</label>
+          <select id="gender" formControlName="gender"
+            class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-600 focus:border-transparent w-full">
+            <option value="">Selecciona tu género</option>
+            <option value="Male">Masculino</option>
+            <option value="Female">Femenino</option>
+            <option value="other">Otro</option>
+          </select>
+          <div *ngIf="profileForm.get('gender')?.invalid && profileForm.get('gender')?.touched" class="text-red-600 text-xs mt-1">
+            El género es obligatorio.
+          </div>
+        </div>
+        <!-- Biografía (ocupa dos columnas en sm+) -->
+        <div class="col-span-1 sm:col-span-2 flex flex-col">
+          <label for="bio" class="text-gray-700 font-semibold mb-1">Biografía</label>
+          <textarea id="bio" formControlName="bio" rows="3"
+            class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-600 focus:border-transparent w-full"></textarea>
+          <div *ngIf="profileForm.get('bio')?.invalid && profileForm.get('bio')?.touched" class="text-red-600 text-xs mt-1">
+            <span *ngIf="profileForm.get('bio')?.errors?.['required']">La biografía es obligatoria.</span>
+            <span *ngIf="profileForm.get('bio')?.errors?.['maxlength']">No puede exceder 500 caracteres.</span>
+          </div>
+        </div>
+      </div>
     </div>
-    <button (click)="onUploadAdditionalPhotos()" [disabled]="additionalPhotosFiles.length === 0 || isLoading">Subir Fotos Adicionales</button>
+
+    <!-- Preferencias de Búsqueda -->
+    <div class="flex flex-col gap-4 w-full">
+      <h2 class="text-pink-600 mb-3 text-2xl font-bold border-b-2 border-gray-100 pb-2 w-full">Preferencias de Búsqueda</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 items-center">
+        <!-- Edad mínima -->
+        <div class="flex flex-col">
+          <label for="minAge" class="text-gray-700 font-semibold mb-1">Edad mínima</label>
+          <input id="minAge" type="number" formControlName="minAge"
+            class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-600 focus:border-transparent w-full" />
+          <div *ngIf="profileForm.get('minAge')?.invalid && profileForm.get('minAge')?.touched" class="text-red-600 text-xs mt-1">
+            Debe ser al menos 18.
+          </div>
+        </div>
+        <!-- Edad máxima -->
+        <div class="flex flex-col">
+          <label for="maxAge" class="text-gray-700 font-semibold mb-1">Edad máxima</label>
+          <input id="maxAge" type="number" formControlName="maxAge"
+            class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-600 focus:border-transparent w-full" />
+          <div *ngIf="profileForm.get('maxAge')?.invalid && profileForm.get('maxAge')?.touched" class="text-red-600 text-xs mt-1">
+            Debe ser al menos 18.
+          </div>
+        </div>
+        <!-- Interesado en -->
+        <div class="flex flex-col">
+          <label for="interestedInGender" class="text-gray-700 font-semibold mb-1">Interesado en</label>
+          <select id="interestedInGender" formControlName="interestedInGender"
+            class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-600 focus:border-transparent w-full">
+            <option value="">Selecciona</option>
+            <option value="Male">Hombres</option>
+            <option value="Female">Mujeres</option>
+            <option value="other">Otros</option>
+          </select>
+          <div *ngIf="profileForm.get('interestedInGender')?.invalid && profileForm.get('interestedInGender')?.touched" class="text-red-600 text-xs mt-1">
+            Campo obligatorio.
+          </div>
+        </div>
+        <!-- Distancia máxima -->
+        <div class="flex flex-col">
+          <label for="maxDistance" class="text-gray-700 font-semibold mb-1">Distancia máxima (km)</label>
+          <input id="maxDistance" type="number" formControlName="maxDistance"
+            class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-600 focus:border-transparent w-full" />
+          <div *ngIf="profileForm.get('maxDistance')?.invalid && profileForm.get('maxDistance')?.touched" class="text-red-600 text-xs mt-1">
+            Debe ser al menos 1.
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- Ubicación -->
+    <div class="flex flex-col gap-4 w-full">
+      <h2 class="text-pink-600 mb-3 text-2xl font-bold border-b-2 border-gray-100 pb-2 w-full">Ubicación</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 items-center">
+        <!-- Ciudad -->
+        <div class="flex flex-col">
+          <label for="city" class="text-gray-700 font-semibold mb-1">Ciudad</label>
+          <input id="city" type="text" formControlName="city"
+            class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-600 focus:border-transparent w-full" />
+          <div *ngIf="profileForm.get('city')?.invalid && profileForm.get('city')?.touched" class="text-red-600 text-xs mt-1">
+            La ciudad es obligatoria.
+          </div>
+        </div>
+        <!-- País -->
+        <div class="flex flex-col">
+          <label for="country" class="text-gray-700 font-semibold mb-1">País</label>
+          <input id="country" type="text" formControlName="country"
+            class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-pink-600 focus:border-transparent w-full" />
+          <div *ngIf="profileForm.get('country')?.invalid && profileForm.get('country')?.touched" class="text-red-600 text-xs mt-1">
+            El país es obligatorio.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón principal Guardar Perfil -->
+    <div class="flex justify-center">
+      <button
+        type="submit"
+        [disabled]="profileForm.invalid || isLoading"
+        class="bg-pink-600 text-white px-6 py-2 sm:px-8 sm:py-3 rounded-full text-base sm:text-lg font-semibold transition duration-300 hover:bg-pink-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+      >
+        Guardar Perfil
+      </button>
+    </div>
+  </form>
+
+  <!-- ================================== -->
+  <!-- Carrusel de Fotos Adicionales      -->
+  <!-- ================================== -->
+  <div class="w-full max-w-2xl mt-8">
+    <h3 class="text-indigo-600 text-xl font-semibold mb-4">Tus Fotos Adicionales</h3>
+    <div class="relative">
+      <div class="flex space-x-4 overflow-x-auto pb-2">
+        <!-- Botón “+” para agregar nuevas fotos -->
+        <div
+          class="shrink-0 flex items-center justify-center w-32 h-32 bg-gray-200 rounded-lg cursor-pointer hover:bg-gray-300"
+          (click)="triggerAdditionalPhotosInput()"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 4v16m8-8H4" />
+          </svg>
+        </div>
+        <!-- Mostrar cada URL como imagen en carrusel -->
+        <ng-container *ngFor="let url of additionalPhotoUrls">
+          <div class="shrink-0 w-32 h-32 rounded-lg overflow-hidden border border-gray-300">
+            <img [src]="url" alt="Foto adicional" class="object-cover w-full h-full" />
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================== -->
+  <!-- Modal: Foto de Perfil              -->
+  <!-- ================================== -->
+  <div
+    *ngIf="showProfilePhotoModal"
+    class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+  >
+    <div class="bg-white rounded-xl shadow-xl w-11/12 sm:w-2/3 md:w-1/2 lg:w-1/3 p-6 relative">
+      <button
+        (click)="closeProfilePhotoModal()"
+        class="absolute top-4 right-4 text-3xl font-bold text-gray-600 hover:text-gray-900 focus:outline-none"
+      >
+        &times;
+      </button>
+
+      <h2 class="text-pink-600 text-2xl font-bold mb-6">Cambiar Foto de Perfil</h2>
+
+      <div class="flex flex-col items-center gap-6 mb-6">
+        <div
+          class="w-32 h-32 rounded-full overflow-hidden shadow-lg border-4 border-pink-200"
+          *ngIf="profileForm.get('profilePhotoUrl')?.value"
+        >
+          <img
+            [src]="profileForm.get('profilePhotoUrl')?.value"
+            alt="Foto de Perfil Actual"
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <div class="flex flex-col w-full gap-3">
+          <label for="profilePhotoModal" class="font-semibold text-gray-700 text-sm">Selecciona una nueva foto:</label>
+          <input
+            id="profilePhotoModal"
+            type="file"
+            (change)="onProfilePhotoSelected($event)"
+            accept="image/*"
+            class="text-gray-700"
+          />
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-4">
+        <button
+          (click)="closeProfilePhotoModal()"
+          class="px-5 py-2 rounded-lg font-semibold text-gray-700 hover:bg-gray-100 transition"
+        >
+          Cancelar
+        </button>
+        <button
+          (click)="onUploadProfilePhoto()"
+          [disabled]="!profilePhotoFile || isLoading"
+          class="bg-pink-600 text-white px-8 py-2 rounded-lg font-semibold transition duration-300 hover:bg-pink-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+        >
+          Subir
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

@@ -1,16 +1,6 @@
 /* Reset básico para el cuerpo */
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@import "tailwindcss";
 
-/* Estilos para el router-outlet o el contenedor principal del contenido */
-:host {
-  display: block;
-}
-
-.router-container {
-  padding-top: 75px;
+.router-container{
+    margin-top: 4rem;
 }
